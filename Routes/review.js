@@ -1,4 +1,4 @@
-import { Express } from "express";
+import  express  from "express";
 import {
   getAllReviews,
   createReview,
@@ -10,7 +10,7 @@ const router = express.Router({ mergeParams: true });
 // /doctor/doctorId/reviews
 
 router
-  .router("/")
+  .route("/")
   .get(getAllReviews)
   .post(authenticate, restrict(["patient"]), createReview);
 

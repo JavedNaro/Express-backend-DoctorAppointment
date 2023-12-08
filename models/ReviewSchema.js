@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import DoctorSchema from "./DoctorSchema";
+import DoctorSchema from "./DoctorSchema.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -26,39 +26,36 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-reviewSchema.pre(/^find/, function(next){
-
+reviewSchema.pre(/^find/, function (next) {
   this.populate({
-    path:'user',
+    path: "user",
     select: "name photo",
   });
   next();
 });
 
-
-reviewSchema.statics.calcAverageRatings = async function (doctorId){
-
+reviewSchema.statics.calcAverageRatings = async function (doctorId) {
   //this points the current rreviews
-  const stats = awaits this.aggregate([{
-    $match:{doctor:doctorId}
-  },
-  {
-    $group:{
-      _id:'$doctor',
-      numOfRating:{$sum:1},
-      avgRating:{$avg:'$rating'}
-    }
-  }
-  ])
+  const stats = await this.aggregate([
+    {
+      $match: { doctor: doctorId },
+    },
+    {
+      $group: {
+        _id: "$doctor",
+        numOfRating: { $sum: 1 },
+        avgRating: { $avg: "$rating" },
+      },
+    },
+  ]);
 
   await DoctorSchema.finfByIdAndUpdate(doctorId, {
     totalRating: stats[0].numOfRating,
-    averageRating:stats[0].avgRating,
+    averageRating: stats[0].avgRating,
   });
 };
 
-reviewSchema.post('save', function(){
-
+reviewSchema.post("save", function () {
   this.constructor.calcAverageRatings(this.doctor);
 });
 

@@ -1,4 +1,4 @@
-import { Express } from "express";
+import  express  from "express";
 import {
   updateDoctor,
   deleteDoctor,
@@ -9,7 +9,7 @@ import { authenticate, restrict } from "../auth/verifyToken.js";
 
 import reviewRouter from "./review.js";
 
-const router = exprss.Router();
+const router = express.Router();
 
 // nested router
 router.use("/:doctorId/reviews", reviewRouter);

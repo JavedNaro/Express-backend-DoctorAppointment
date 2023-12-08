@@ -1,4 +1,4 @@
-import { Express } from "express";
+import express from "express";
 import {
   updateUser,
   deleteUser,
@@ -8,11 +8,11 @@ import {
 
 import { authenticate, restrict } from "../auth/verifyToken.js";
 
-const router = exprss.Router();
+const router = express.Router();
 
 router.get("/:id", authenticate, restrict(["patient"]), getSingleUser);
 router.get("/", authenticate, restrict(["admin"]), getAllUser);
-router.get("/", authenticate, restrict(["patient"]), updateUser);
-router.get("/", authenticate, restrict(["patient"]), deleteUser);
+router.put("/update", authenticate, restrict(["patient"]), updateUser);
+router.delete("/delete", authenticate, restrict(["patient"]), deleteUser);
 
 export default router;
