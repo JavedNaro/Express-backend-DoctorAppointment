@@ -1,4 +1,4 @@
-import Doctor from "../models/DoctorSchema";
+import Doctor from "../models/DoctorSchema.js";
 
 export const updateDoctor = async (req, res) => {
   const id = req.parent.id;
@@ -36,11 +36,13 @@ export const deleteDoctor = async (req, res) => {
   }
 };
 
-export const getSingleDcotor = async (req, res) => {
+export const getSingleDoctor = async (req, res) => {
   const id = req.parent.id;
 
   try {
-    const doctor = await Doctor.findById(id).select("-password");
+    const doctor = await Doctor.findById(id)
+      .populate("reviews")
+      .select("-password");
 
     res.status(200).json({
       success: true,

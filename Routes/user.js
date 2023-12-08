@@ -1,4 +1,4 @@
-import { Express } from "express";
+import express from "express";
 import {
   updateUser,
   deleteUser,
@@ -6,11 +6,13 @@ import {
   getSingleUser,
 } from "../Controllers/userController.js";
 
-const router = exprss.Router();
+import { authenticate, restrict } from "../auth/verifyToken.js";
 
-router.get("/:id", getSingleUser);
-router.get("/", getAllUser);
-router.get("/", updateUser);
-router.get("/", deleteUser);
+const router = express.Router();
+
+router.get("/:id", authenticate, restrict(["patient"]), getSingleUser);
+router.get("/", authenticate, restrict(["admin"]), getAllUser);
+router.put("/update", authenticate, restrict(["patient"]), updateUser);
+router.delete("/delete", authenticate, restrict(["patient"]), deleteUser);
 
 export default router;

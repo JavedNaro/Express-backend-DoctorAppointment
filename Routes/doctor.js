@@ -1,16 +1,21 @@
-import { Express } from "express";
+import  express  from "express";
 import {
   updateDoctor,
   deleteDoctor,
   getAllDoctor,
   getSingleDoctor,
 } from "../Controllers/doctorController.js";
+import { authenticate, restrict } from "../auth/verifyToken.js";
 
-const router = exprss.Router();
+import reviewRouter from "./review.js";
 
+const router = express.Router();
+
+// nested router
+router.use("/:doctorId/reviews", reviewRouter);
 router.get("/:id", getSingleDoctor);
 router.get("/", getAllDoctor);
-router.get("/", updateDoctor);
-router.get("/", deleteDoctor);
+router.get("/", authenticate, restrict(["doctor"]), updateDoctor);
+router.get("/", authenticate, restrict(["doctor"]), deleteDoctor);
 
 export default router;
